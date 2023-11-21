@@ -24,7 +24,7 @@ def signup(request):
 
 def login_user(request):
     if request.user.is_authenticated:
-        return render(request,'users/loginOK.html')
+        return redirect('diary:main')
 
 
     if request.method == 'POST':
@@ -41,8 +41,9 @@ def login_user(request):
         if user is not None:
             messages.success(request,'로그인 되었습니다.')
             login(request,user)
-            return redirect('users:loginOK')
-            # return render(request, 'users/loginOK.html')
+            # return redirect('users:loginOK')
+            return redirect('diary:main')
+            # return render(request, 'users/main.html')
         else:
             messages.error(request,'아이디 혹은 비밀번호가 틀렸습니다.')
 
@@ -58,4 +59,4 @@ def signupOK(request):
     return render(request, 'users/signupOK.html')
 
 def loginOK(request):
-    return render(request, 'users/loginOK.html')
+    return render(request, 'users/main.html')

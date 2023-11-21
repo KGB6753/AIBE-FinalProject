@@ -49,7 +49,9 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'users.apps.UsersConfig',
-
+    'diary.apps.DiaryConfig',
+    'report.apps.ReportConfig',
+    'setting.apps.SettingConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
