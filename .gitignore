@@ -204,3 +204,6 @@ secrets.json
 
 # idea 파일
 *.idea
+
+# Ignore media/images directory
+media/images/*

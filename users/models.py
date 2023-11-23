@@ -31,6 +31,7 @@ class CustomUserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser):
+    id = models.BigAutoField(primary_key=True)
     email = models.EmailField(max_length=255, unique=True)
     nickname = models.CharField(max_length=20, unique=True)
     is_admin = models.BooleanField(default=False)
