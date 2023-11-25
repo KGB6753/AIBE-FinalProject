@@ -2,6 +2,7 @@
 {% block content %}
 
 {% if user.is_authenticated %}
+
     <p>회원번호, {{ user.id }} !</p>
     <p>안녕하세요, {{ user.nickname }} 님!</p>
     <p>이메일: {{ user.email }}</p>
@@ -34,6 +35,8 @@
     <p>조회된 음식이 없습니다.</p>
 {% endif %}
     </form>
+
+
 {% else %}
     <p>로그인이 필요합니다.</p>
 {% endif %}
@@ -54,6 +57,3 @@
 
 
 {% endblock %}
-
-
-

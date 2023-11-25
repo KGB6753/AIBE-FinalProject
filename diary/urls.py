@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from django.contrib.auth import views as auth_views
 # from .forms import CustomAuthenticationForm
 from . import views
@@ -9,6 +9,7 @@ from django.conf.urls.static import static
 app_name='diary'
 
 urlpatterns = [
+    # path('analyze-image/', views.analyze_image, name='analyze_image'),
     path('main/', views.main, name='main'),
     path('search/', views.search, name='search'),
     path('photo/', views.photo, name='photo'),
