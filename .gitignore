@@ -205,8 +205,16 @@ secrets.json
 # idea 파일
 *.idea
 
-# Ignore media/images directory
-media/images/*
+# Ignore all files in the media directory
+/media/*
 
+# Except for specific folders
 !/media/images/
 !/media/static/
+
+# Ignore all files in the images directory
+/media/images/*
+
+# Except for specific files if needed
+!/media/images/.gitkeep
+!/media/static/.gitkeep
