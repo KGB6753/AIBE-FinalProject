@@ -11,27 +11,59 @@
     <p>달력 추가해서, 누르면 그 날짜 값을 가지고 diary/main 을 다시 호출할 수 있게 달력 만들어줘야 함 자바스크립트 이용 필요할듯</p>
     <h1>Today's Date</h1>
     <p>{{ today }}</p>
+    <form id="changeDay" method="get" action="{% url 'diary:main' %}">
+        {% csrf_token %}
+        <input type="date" name="today" value="{{today}}">
+        <button type="submit">날짜변경</button>
+    </form>
+    {% if date == today %}
+
+    <p>시작체중{{body.start_weight}} 현재체중{{body.current_weight}} 목표체중{{body.target_weight}}</p>
+
+    <form id="changeWeight" method="post" action="{% url 'diary:main' %}">
+        오늘의 몸무게
+        {% csrf_token %}
+        <input type="number" name="today_weight" step="0.1" min="0" max="999" value="{{body.current_weight}}">kg
+        <button type="submit">체중 입력</button>
+    </form>
+    {% else %}
+    <!--오늘이 아닌 날을 볼때-->
+        {{ today }} 의 몸무게 = {{body.current_weight}}
+    {% endif %}
+    <p>식사 종합</p>
+        <ul> 하루 섭취 가능한 칼로리 및 영양
+            <li>칼로리 = {{kcal_info.kcal}}</li>
+            <li>탄수화물 = {{kcal_info.carbs}}</li>
+            <li>단백질 = {{kcal_info.proteins}}</li>
+            <li>지방 = {{kcal_info.fats}}</li>
+        </ul>
+        <ul> 섭취한 칼로리 및 영양
+            <li>칼로리 = {{kcal_result.kcal}}</li>
+            <li>탄수화물 = {{kcal_result.carbs}}</li>
+            <li>단백질 = {{kcal_result.proteins}}</li>
+            <li>지방 = {{kcal_result.fats}}</li>
+        </ul>
+        <ul> 섭취 가능한 칼로리 및 영양
+            <li>칼로리 = {{kcal_available.kcal}}</li>
+            <li>탄수화물 = {{kcal_available.carbs}}</li>
+            <li>단백질 = {{kcal_available.proteins}}</li>
+            <li>지방 = {{kcal_available.fats}}</li>
+        </ul>
+    <p>식사 리스트</p>
 {% if menu_list %}
     {% for menu in menu_list %}
     <ul>
-
-        <li>{{ menu.menu_id }}</li>
-        <li>{{ menu.menu_weight }}</li>
-        <li>{{ menu.menu_date }}</li>
-        {% if menu.menu_category == '1' %}
-            <li>아침</li>
-        {% elif menu.menu_category == '2' %}
-            <li>점심</li>
-        {% elif menu.menu_category == '3' %}
-            <li>저녁</li>
-        {% elif menu.menu_category == '4' %}
-            <li>간식</li>
-        {% elif menu.menu_category == '5' %}
-            <li>야식</li>
+        <li>{{ menu.category }} : {{ menu.time }} </li>
+        {% if menu.foodimage %}
+            <li><img src="{{menu.foodimage.url}}"></li>
+        {% else %}
+            <li><img src="/media/static/noimage.jpg"></li>
         {% endif %}
-        <li>{{ menu.menu_food_id }}</li>
-        <li>{{ menu.menu_photo_id }}</li>
-        <li>{{ menu.menu_user_id }}</li>
+        <li>{{ menu.foodname }}</li>
+        <li>칼로리 : {{ menu.kcal }}kcal</li>
+        <li>탄수화물 : {{ menu.carbs }}g</li>
+        <li>단백질 : {{ menu.proteins }}g</li>
+        <li>지방 : {{ menu.fats }}g</li>
 
     </ul>
     {% endfor %}
@@ -43,5 +75,7 @@
 {% else %}
     <p>로그인이 필요합니다.</p>
 {% endif %}
+
+
 
 {% endblock %}

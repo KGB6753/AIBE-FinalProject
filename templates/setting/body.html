@@ -7,6 +7,31 @@
     <p>이메일: {{ user.email }}</p>
     <a href="{% url 'users:logout' %}">로그아웃</a>
     <p>신체 정보</p>
+    <h2>기존 신체 정보</h2>
+    <ul>
+        <li>현재 체중 : {{ body.weight_current }} kg</li>
+        <li>현재 키 : {{ body.diet_user_height }} cm</li>
+        {% if body.diet_exercise == "1" %}
+            <li>현재 운동수준 : 매우 비활동적</li>
+        {% elif body.diet_exercise == "2" %}
+            <li>현재 운동수준 : 비활동적</li>
+        {% elif body.diet_exercise == "3" %}
+            <li>현재 운동수준 : 보통</li>
+        {% elif body.diet_exercise == "4" %}
+            <li>현재 운동수준 : 활동적</li>
+        {% elif body.diet_exercise == "5" %}
+            <li>현재 운동수준 : 매우 활동적</li>
+        {% endif %}
+    </ul>
+
+    <h2>Set Body</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        체중{{ form.weight_current }}
+        신장{{ form.diet_user_height }}
+        운동강도{{ form.diet_exercise }}
+        <button type="submit">Save Menu</button>
+    </form>
 
 
 {% else %}

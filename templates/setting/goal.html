@@ -6,8 +6,46 @@
     <p>안녕하세요, {{ user.nickname }} 님!</p>
     <p>이메일: {{ user.email }}</p>
     <a href="{% url 'users:logout' %}">로그아웃</a>
-    <p>목표 설정</p>
 
+
+    <p>목표 설정</p>
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <h2>기존 목표</h2>
+    <ul>
+        <li>{{ goal.diet_start_day }}</li>
+        <li>{{ goal.diet_start_weight }} kg</li>
+        <li>{{ goal.diet_target_weight }} kg</li>
+        {% if goal.diet_exercise == "1" %}
+            <li>매우 비활동적</li>
+        {% elif goal.diet_exercise == "2" %}
+            <li>비활동적</li>
+        {% elif goal.diet_exercise == "3" %}
+            <li>보통</li>
+        {% elif goal.diet_exercise == "4" %}
+            <li>활동적</li>
+        {% elif goal.diet_exercise == "5" %}
+            <li>매우 활동적</li>
+        {% endif %}
+        <li>{{ goal.diet_user_height}} cm</li>
+    </ul>
+
+    <h2>Set Goal</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        시작체중{{ form.diet_start_weight }}
+        목표체중{{ form.diet_target_weight }}
+        운동강도{{ form.diet_exercise }}
+        신장{{ form.diet_user_height }}
+        <button type="submit">Save Menu</button>
+    </form>
 {% else %}
     <p>로그인이 필요합니다.</p>
 {% endif %}
