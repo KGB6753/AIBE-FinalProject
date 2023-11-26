@@ -207,3 +207,6 @@ secrets.json
 
 # Ignore media/images directory
 media/images/*
+
+!/media/images/
+!/media/static/
