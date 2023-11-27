@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if user.is_authenticated %}
+    <p>회원번호, {{ user.id }} !</p>
+    <p>안녕하세요, {{ user.nickname }} 님!</p>
+    <p>이메일: {{ user.email }}</p>
+    <a href="{% url 'users:logout' %}">로그아웃</a>
+    <h1>수정 및 삭제!!!</h1>
+{% if food %}
+    <h1>{{ food.food_name }}</h1>
+    <h2>{{ food.food_weight }}g</h2>
+    <h2>{{ food.food_kcal }}kcal</h2>
+    <h2>{{ food.food_carbs }}kcal</h2>
+    <h2>{{ food.food_proteins }}kcal</h2>
+    <h2>{{ food.food_fats }}kcal</h2>
+
+        {% if photo %}
+            <li><img src="{{photo.photo_url.url}}"></li>
+        {% else %}
+            <li><img src="/media/static/noimage.jpg"></li>
+        {% endif %}
+    <form method="post" enctype="multipart/form-data" id="menuForm">
+        <h3>사진변경</h3>
+        <input type="file" name="photo">
+    <h2>Change Menu</h2>
+
+        {% csrf_token %}
+        {{ form.menu_category }}
+        무게(인분)<input type="number" name="menu_weight" step="0.1" value="{{menu.menu_weight}}">
+        <input type="datetime-local" name="menu_date" id="" value="{{ menu.menu_date|date:'Y-m-d\TH:i' }}">
+        <input type="hidden" name="menu_id" value="{{ menu.menu_id }}">
+        <input type="hidden" name="photo_id" value="{{ photo.photo_id }}">
+
+        <button type="submit" value="Change Menu" onclick="changeMenu()">Change Menu</button>
+        <button type="submit" value="Delete Menu" onclick="deleteMenu()">Delete Menu</button>
+    </form>
+
+{% else %}
+    <p>조회된 음식이 없습니다.</p>
+{% endif %}
+{% else %}
+    <p>로그인이 필요합니다.</p>
+{% endif %}
+
+<script>
+function changeMenu() {
+
+    document.getElementById("menuForm").action = "/diary/meal/detail/";
+}
+
+function deleteMenu() {
+
+    document.getElementById("menuForm").action = "/diary/meal/delete/";
+}
+</script>
+
+{% endblock %}

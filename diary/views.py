@@ -18,9 +18,77 @@ import json
 from django.utils import timezone
 from decimal import Decimal
 import numpy as np
+import ast
+import os
+from django.conf import settings
 
 # 모델 로드
 model = torch.hub.load('ultralytics/yolov5', 'custom', path='diary/weights/detect.pt')
+def delete(request):
+    menu_id = request.POST.get('menu_id','')
+    menu = Menu.objects.get(menu_id=menu_id)
+    menu.delete()
+    if request.POST.get('photo_id',''):
+        photo_id = request.POST.get('photo_id','')
+        photo = Photo.objects.get(photo_id=photo_id)
+        photo.delete()
+        image_path = os.path.join(settings.MEDIA_ROOT, str(photo.photo_url))
+        if os.path.exists(image_path):
+            os.remove(image_path)
+    return redirect('diary:main')
+
+def detail(request):
+    if request.method == 'POST':
+        print(request.POST.get('menu_id', ''))
+        print(request.POST.get('menu_weight', ''))
+        print(request.POST.get('menu_category', ''))
+        print(request.POST.get('menu_date', ''))
+        menu_id = request.POST.get('menu_id', '')
+        menu = Menu.objects.filter(menu_id=menu_id).first()
+        menu.menu_weight = request.POST.get('menu_weight', '')
+        menu.menu_category = request.POST.get('menu_category', '')
+        menu.menu_date = request.POST.get('menu_date', '')
+
+        if 'photo' in request.FILES and request.FILES['photo']:
+            if request.POST.get('photo_id', ''):
+                photo = Photo.objects.filter(photo_id=request.POST.get('photo_id', '')).first()
+                image_path = os.path.join(settings.MEDIA_ROOT, str(photo.photo_url))
+                if os.path.exists(image_path):
+                    os.remove(image_path)
+                photo.photo_url = request.FILES['photo']
+                photo.save()
+            else:
+                if not menu.menu_photo:
+                    photo = Photo()
+                    photo.photo_url = request.FILES['photo']
+                    photo.save()
+                    print(photo.photo_url)
+                    print(photo.photo_id)
+                    menu.menu_photo = photo
+
+        menu.save()
+
+
+        return redirect('diary:main')
+
+
+    menu_id = request.GET.get('menu_id','')
+    menu = Menu.objects.filter(menu_id=menu_id).first()
+    photo_id = request.GET.get('photo_id', '')
+    if photo_id:
+        photo = Photo.objects.filter(photo_id=photo_id).first()
+    else:
+        photo = None
+    food_id = request.GET.get('food_id', '')
+    food = Food.objects.filter(food_id=food_id).first()
+
+    # 특정 값을 초기값으로 설정
+    initial_data = {'menu_category': menu.menu_category}
+    form = MenuForm(initial_data)
+
+
+    context = {'menu':menu,'photo':photo,'food':food,'form':form}
+    return render(request, 'diary/detail.html',context)
 
 def recommendation(kcal_available):
     carbs = kcal_available.get('carbs')
@@ -103,7 +171,9 @@ def get_menu_list(user_id,day):
         proteins = int(food.food_proteins * menu.menu_weight)
 
         fats = int(food.food_fats * menu.menu_weight)
-
+        weight = int(menu.menu_weight * food.food_weight)
+        print("그람수!")
+        print(weight)
         category = menu.menu_category
         if category=='1':
             category='아침'
@@ -116,8 +186,14 @@ def get_menu_list(user_id,day):
         elif category =='5':
             category='야식'
 
-        menu_instance = {'foodimage':foodimage,'category':category,'foodname':foodname,'time':time,'kcal':kcal,'carbs':carbs,'proteins':proteins,'fats':fats}
-        print(menu_instance)
+        if menu.menu_photo:
+            menu_instance = {'menu_id':menu.menu_id,'photo_id':menu.menu_photo.photo_id,'food_id':food.food_id,'foodimage':foodimage,'weight':weight,'category':category,'foodname':foodname,'time':time,'kcal':kcal,'carbs':carbs,'proteins':proteins,'fats':fats}
+        else:
+            menu_instance = {'menu_id': menu.menu_id,  'food_id': food.food_id,
+                             'foodimage': foodimage, 'weight': weight, 'category': category,
+                             'foodname': foodname, 'time': time, 'kcal': kcal, 'carbs': carbs, 'proteins': proteins,
+                             'fats': fats}
+
         menu_list.append(menu_instance)
 
     return menu_list
@@ -214,17 +290,6 @@ def analyze_image(request):
 
 # Create your views here.
 def main(request):
-    # today = datetime.now().strftime("%Y-%m-%d")
-    # print(today)
-    #
-    # menu_list = Menu.objects.order_by('menu_date')
-    # menu_list = menu_list.filter(
-    #     Q(menu_date__icontains=today)
-    # )
-    # print(menu_list)
-    # context = {'menu_list': menu_list,'today':today}
-    # return render(request, 'diary/main.html', context)
-
 
     goal = User.objects.filter(id=request.user.id).first()
     if goal.goal_set == 0:
@@ -233,10 +298,10 @@ def main(request):
     
     # 데이터를 위한 날짜설정
     today = datetime.now().date().strftime('%Y-%m-%d')
-    print(today)
+
     # 비교용 오늘 날짜
     date = datetime.now().date().strftime('%Y-%m-%d')
-    print(date)
+
 
     if request.GET.get('today',''):
         today = request.GET.get('today','')
@@ -260,7 +325,10 @@ def main(request):
             'target_weight': Diet.objects.filter(diet=user_instance).first().diet_target_weight}
 
     menu_list = get_menu_list(user_id, today)
-    print(menu_list)
+
+    print("그람수!!!")
+    for i in menu_list:
+        print(i.get('weight'))
 
     # menu_list = Menu.objects.filter(menu_date__date=today,menu_user=user_id).order_by('menu_date')
     # 이 메뉴리스트로 DB에서 불러와서 사진, 각종 정보들을 정확하게 다시 만들어서 보내주게 추가 작업 필요

@@ -74,11 +74,17 @@
             <li><img src="/media/static/noimage.jpg"></li>
         {% endif %}
         <li>{{ menu.foodname }}</li>
+        <li>섭취량 : {{menu.weight}}g</li>
         <li>칼로리 : {{ menu.kcal }}kcal</li>
         <li>탄수화물 : {{ menu.carbs }}g</li>
         <li>단백질 : {{ menu.proteins }}g</li>
         <li>지방 : {{ menu.fats }}g</li>
-
+        <li><form id="detail" method="get" action="{% url 'diary:detail' %}">
+            <input type="hidden" name="menu_id" value="{{menu.menu_id}}">
+            <input type="hidden" name="photo_id" value="{{menu.photo_id}}">
+            <input type="hidden" name="food_id" value="{{menu.food_id}}">
+        <button type="submit">수정</button>
+    </form></a></li>
     </ul>
     {% endfor %}
 
