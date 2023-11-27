@@ -59,6 +59,22 @@
                 <li>탄수화물 = {{recommendation.food_carbs}}g</li>
                 <li>단백질 = {{recommendation.food_proteins}}g</li>
                 <li>지방 = {{recommendation.food_fats}}g</li>
+                {% if kcal_available.kcal and recommendation.food_kcal %}
+                    <script>
+                        function calculateServing() {
+                          var serving = {{ kcal_available.kcal }} / {{ recommendation.food_kcal }};
+                          var serving_g = serving * {{ recommendation.food_weight }};
+                          return serving.toFixed(1);  // 소수점 1자리로 제한
+                          }
+                        function calculateServing_g() {
+                          var serving = {{ kcal_available.kcal }} / {{ recommendation.food_kcal }};
+                          var serving_g = serving * {{ recommendation.food_weight }};
+                          return serving_g.toFixed(1);  // 소수점 1자리로 제한
+                          }
+
+                         document.write('<li>섭취가능: ' + calculateServing() + '인분('+ calculateServing_g() +')g까지</li>');
+                    </script>
+                {% endif %}
             </ul>
             {% endfor %}
         {% endif %}
