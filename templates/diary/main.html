@@ -49,6 +49,20 @@
             <li>단백질 = {{kcal_available.proteins}}</li>
             <li>지방 = {{kcal_available.fats}}</li>
         </ul>
+    {% if date == today %}
+    <p>식사 추천</p>
+        {% if recommendation_list %}
+            {%  for recommendation in recommendation_list %}
+            <ul> {{recommendation.food_name}}
+                <li>1인분 = {{recommendation.food_weight}}g</li>
+                <li>칼로리 = {{recommendation.food_kcal}}kcal</li>
+                <li>탄수화물 = {{recommendation.food_carbs}}g</li>
+                <li>단백질 = {{recommendation.food_proteins}}g</li>
+                <li>지방 = {{recommendation.food_fats}}g</li>
+            </ul>
+            {% endfor %}
+        {% endif %}
+    {% endif %}
     <p>식사 리스트</p>
 {% if menu_list %}
     {% for menu in menu_list %}

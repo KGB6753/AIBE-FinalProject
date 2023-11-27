@@ -17,9 +17,66 @@ import io
 import json
 from django.utils import timezone
 from decimal import Decimal
+import numpy as np
 
 # 모델 로드
 model = torch.hub.load('ultralytics/yolov5', 'custom', path='diary/weights/detect.pt')
+
+def recommendation(kcal_available):
+    carbs = kcal_available.get('carbs')
+    proteins = kcal_available.get('proteins')
+    fats = kcal_available.get('fats')
+    carbs = carbs / proteins
+    fats = fats / proteins
+    proteins = proteins / proteins
+    print('추천!')
+    print(carbs, proteins, fats)
+
+
+
+
+    # 유사성 - 유클리디안 거리 계산법
+    def euclidean_distance(point1, point2):
+        return np.linalg.norm(np.array(point1) - np.array(point2))
+
+    # U의 좌표
+    u_coordinates = (carbs, fats)
+
+    # 다른 개체들의 좌표 리스트
+    food_list = Food.objects.all()
+    other_objects=[]
+    for food in food_list:
+        carbs = float(food.food_carbs / food.food_proteins)
+        fats = float(food.food_fats / food.food_proteins)
+        other_objects.append((carbs,fats))
+    # print('리스트 비율계산')
+    # print(other_objects)
+
+    # 각 개체와 U 사이의 유클리디안 거리 계산
+    distances = [euclidean_distance(u_coordinates, obj) for obj in other_objects]
+
+    # 거리가 가장 작은 개체 찾기
+    # most_similar_object_index = distances.index(min(distances))
+    # most_similar_object = other_objects[most_similar_object_index]
+    # print(f"The most similar object has coordinates: {most_similar_object}")
+    # most_similar_object = food_list[most_similar_object_index]
+    # print(f"The most similar object has coordinates: {most_similar_object}")
+    # print(most_similar_object.food_name)
+
+    # 거리가 가장 작은 상위 3개 개체 찾기
+    most_similar_objects_indices = sorted(range(len(distances)), key=lambda k: distances[k])[:3]
+    # most_similar_objects = [other_objects[i] for i in most_similar_objects_indices]
+    # print(f"The 3 most similar objects have coordinates: {most_similar_objects}")
+    most_similar_objects = [food_list[i] for i in most_similar_objects_indices]
+    # print(f"The 3 most similar objects have coordinates: {most_similar_objects}")
+    # for object in most_similar_objects:
+    #     print(object.food_name)
+
+
+
+
+    return most_similar_objects
+
 def get_menu_list(user_id,day):
     # 필요 - 음식 이미지 url,음식 이름, 식사종류(아점저간야), 시간, 칼로리, 탄수화물, 단백질, 지방
     menus = Menu.objects.filter(menu_date__date=day,menu_user=user_id).order_by('menu_date')
@@ -213,8 +270,9 @@ def main(request):
     # 하루 섭취한 영양소 칼로리 계산
     kcal_result = day_kcal_calc(menu_list)
     kcal_available = available_kcal(kcal_info,kcal_result)
+    recommendation_list = recommendation(kcal_available)
 
-    context = {'menu_list': menu_list, 'today': today,'date':date, 'body':body,'kcal_info':kcal_info,'kcal_result':kcal_result,'kcal_available':kcal_available}
+    context = {'menu_list': menu_list, 'today': today,'date':date, 'body':body,'kcal_info':kcal_info,'kcal_result':kcal_result,'kcal_available':kcal_available,'recommendation_list':recommendation_list}
 
 
 
