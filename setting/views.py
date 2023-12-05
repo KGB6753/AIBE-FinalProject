@@ -79,6 +79,7 @@ def goal(request):
             return redirect('setting:main')
         else:
             print('폼에러')
+            messages.error(request, '입력된 값이 없거나 범위를 벗어났습니다. 1000미만, 그리고 소수점 한자리까지 입력 가능합니다.')
             return redirect('setting:goal')
 
     form = GoalForm()

@@ -1,16 +1,61 @@
 {% extends "base.html" %}
+{% block style %}
+        #settingBtn {
+            background-color: #555;
+            color: black;
+        }
+{% endblock%}
 {% block content %}
-
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
+        <!-- Navbar Brand (Page Name) -->
+        <a class="navbar-brand text-center" style="width: 100%;">설정</a>
+    </div>
+</nav>
 {% if user.is_authenticated %}
-    <p>회원번호, {{ user.id }} !</p>
-    <p>안녕하세요, {{ user.nickname }} 님!</p>
-    <p>이메일: {{ user.email }}</p>
-    <a href="{% url 'users:logout' %}">로그아웃</a>
-    <p>세팅 메인</p>
-    <a href="{% url 'setting:body' %}">신체 정보 설정</a>
-    <a href="{% url 'setting:goal' %}">목표 설정(리셋)</a>
-    <a href="{% url 'setting:myinfo' %}">개인 정보 변경</a>
-    <a href="{% url 'setting:withdrawal' %}">회원 탈퇴</a>
+
+    <div id="profileContainer">
+        <div id="profileImage">
+    <!--        <img src="path/to/your/profile-image.jpg" alt="Profile Image">-->
+            {{ user.nickname }}
+        </div>
+        <h2>{{ user.email }}</h2>
+    </div>
+
+<!--    <div id="settingsContainer">-->
+<!--        <div class="settingItem"><a href="{% url 'setting:body' %}">신체 정보 설정</a></div>-->
+<!--        <div class="settingItem"><a href="{% url 'setting:goal' %}">목표 설정(리셋)</a></div>-->
+<!--        <div class="settingItem"><a href="{% url 'setting:myinfo' %}">개인 정보 변경</a></div>-->
+<!--        <div class="settingItem"><a href="{% url 'setting:withdrawal' %}">회원 탈퇴</a></div>-->
+<!--        <div class="settingItem"><a href="{% url 'users:logout' %}">로그아웃</a></div>-->
+<!--    </div>-->
+
+
+        <table class="settingTable">
+            <tr>
+                <td><a href="{% url 'setting:body' %}">신체 정보 설정</a></td>
+
+            </tr>
+            <tr>
+
+                <td><a href="{% url 'setting:goal' %}">목표 설정(리셋)</a></td>
+            </tr>
+            <tr>
+                <td><a href="{% url 'setting:myinfo' %}">개인 정보 변경</a></td>
+
+            </tr>
+            <tr>
+
+                <td><a href="{% url 'setting:withdrawal' %}">회원 탈퇴</a></td>
+            </tr>
+            <tr>
+                <td><a href="{% url 'users:logout' %}">로그아웃</a></td>
+            </tr>
+        </table>
+
+
+</div>
 {% else %}
     <p>로그인이 필요합니다.</p>
 {% endif %}

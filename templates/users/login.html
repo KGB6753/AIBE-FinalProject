@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container my-3">
+    <div class="logo-container">
+        <img src="/media/static/CaloriEZ_2.png" alt="Logo" class="logo-img">
+    </div>
+    <p></p>
+    <p></p>
     <form method="post" action="{% url 'users:login' %}">
         {% csrf_token %}
         {% include "form_errors.html" %}
@@ -14,7 +19,18 @@
             <input type="password" class="form-control" name="password" id="password"
                    value="{{ form.password.value|default_if_none:'' }}">
         </div>
-        <button type="submit" class="btn btn-primary">로그인</button>
+
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary">로그인</button>
+        </div>
     </form>
+    <p></p>
+    <a href="{% url 'users:signup' %}">
+        <div class="d-grid gap-2">
+
+            <button class="btn btn-success">회원가입</button>
+
+        </div>
+    </a>
 </div>
 {% endblock %}

@@ -1,51 +1,129 @@
 {% extends "base.html" %}
+{% block style %}
+        #settingBtn {
+            background-color: #555;
+            color: black;
+        }
+{% endblock%}
 {% block content %}
 
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
+        <!-- Navbar Brand (Page Name) -->
+        <a class="navbar-brand text-center" style="width: 100%;">목표 설정</a>
+    </div>
+</nav>
+
+
+
 {% if user.is_authenticated %}
-    <p>회원번호, {{ user.id }} !</p>
-    <p>안녕하세요, {{ user.nickname }} 님!</p>
-    <p>이메일: {{ user.email }}</p>
-    <a href="{% url 'users:logout' %}">로그아웃</a>
+    <p></p>
+
+    {% if goal %}
+
+        <table class="table">
+          <thead class="text-center">
+            <th colspan="2" style="font-size:25px">기존 목표</th>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="col">시작일</th>
+              <td scope="col">{{ goal.diet_start_day }}</td>
+            </tr>
+            <tr>
+              <th scope="row">신장</th>
+              <td scope="row">{{ goal.diet_user_height}}cm</td>
+
+            </tr>
+            <tr>
+              <th scope="row">시작체중</th>
+              <td scope="row">{{ goal.diet_start_weight }} kg</td>
+
+            </tr>
+            <tr>
+              <th scope="row">목표체중</th>
+              <td scope="row">{{ goal.diet_target_weight }} kg</td>
+            </tr>
+            <tr>
+                <th scope="row">운동수준</th>
+                {% if goal.diet_exercise == "1" %}
+                    <td scope="row">매우 비활동적</td>
+                {% elif goal.diet_exercise == "2" %}
+                    <td scope="row">비활동적</td>
+                {% elif goal.diet_exercise == "3" %}
+                    <td scope="row">보통</td>
+                {% elif goal.diet_exercise == "4" %}
+                    <td scope="row">활동적</td>
+                {% elif goal.diet_exercise == "5" %}
+                    <td scope="row">매우 활동적</td>
+                {% endif %}
 
 
-    <p>목표 설정</p>
+            </tr>
+          </tbody>
+        </table>
+
+
+
+
+    {% else %}
+    <div class="alert alert-warning" role="alert">
+            목표가 설정되어 있지 않습니다. 서비스 이용을 위해 목표 설정을 해주십시오.
+    </div>
+    {% endif %}
+    <p></p>
+    <form method="post" enctype="multipart/form-data" class="my-form">
+        {% csrf_token %}
+    <table class="table">
+          <thead class="text-center">
+            <th colspan="2" style="font-size:25px">새 체중관리 목표</th>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row"><label for="diet_user_height" class="form-label">신장</label></th>
+              <td scope="row">{{ form.diet_user_height }} cm</td>
+
+            </tr>
+            <tr>
+              <th scope="row"><label for="diet_start_weight" class="form-label">시작 체중</label></th>
+              <td scope="row">{{ form.diet_start_weight }} kg</td>
+
+            </tr>
+            <tr>
+              <th scope="row"><label for="diet_target_weight" class="form-label">목표 체중</label></th>
+              <td scope="row">{{ form.diet_target_weight }} kg</td>
+            </tr>
+            <tr>
+                <th scope="row"><label for="diet_exercise" class="form-label">운동 강도</label></th>
+                <td scope="row">{{ form.diet_exercise }}</td>
+
+
+
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary">목표 저장</button>
+        </div>
+
+    </form>
+    
+
+
+
     {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
+        <p></p>
+        <div class="alert alert-warning" role="alert">
+          <ul class="messages">
+             {% for message in messages %}
+                   <li>{{ message }}</li>
+              {% endfor %}
+            </ul>
+        </div>
     {% endif %}
 
-    <h2>기존 목표</h2>
-    <ul>
-        <li>{{ goal.diet_start_day }}</li>
-        <li>{{ goal.diet_start_weight }} kg</li>
-        <li>{{ goal.diet_target_weight }} kg</li>
-        {% if goal.diet_exercise == "1" %}
-            <li>매우 비활동적</li>
-        {% elif goal.diet_exercise == "2" %}
-            <li>비활동적</li>
-        {% elif goal.diet_exercise == "3" %}
-            <li>보통</li>
-        {% elif goal.diet_exercise == "4" %}
-            <li>활동적</li>
-        {% elif goal.diet_exercise == "5" %}
-            <li>매우 활동적</li>
-        {% endif %}
-        <li>{{ goal.diet_user_height}} cm</li>
-    </ul>
-
-    <h2>Set Goal</h2>
-
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        시작체중{{ form.diet_start_weight }}
-        목표체중{{ form.diet_target_weight }}
-        운동강도{{ form.diet_exercise }}
-        신장{{ form.diet_user_height }}
-        <button type="submit">Save Menu</button>
-    </form>
 {% else %}
     <p>로그인이 필요합니다.</p>
 {% endif %}

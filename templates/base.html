@@ -1,22 +1,163 @@
 {% load static %}
-<!doctype html>
-<html lang="ko">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<!--    &lt;!&ndash; Required meta tags &ndash;&gt;-->
-<!--    <meta charset="utf-8">-->
-<!--    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
-<!--    &lt;!&ndash; Bootstrap CSS &ndash;&gt;-->
-<!--    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">-->
-<!--    &lt;!&ndash; pybo CSS &ndash;&gt;-->
-<!--    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">-->
-    <title>베이스!</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0",maximum-scale="1",minimum-scale="1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        #content {
+            padding: 16px;
+            margin-top: 45px;
+            margin-bottom: 110px; /* 하단 메뉴바 높이만큼 여백 추가 */
+        }
+
+        #bottomNavbar {
+            position: fixed;
+            bottom: 0;
+            height: 100px; /* 높이를 조절하려는 값으로 설정 */
+            width: 100%;
+            background-color: #333;
+            display: flex; /* Flexbox 사용 */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+        }
+
+        #bottomNavbar a {
+            flex: 1; /* 각 메뉴가 동일한 너비를 가지도록 함 */
+            color: white;
+            text-align: center;
+            padding: 14px 0;
+            text-decoration: none;
+            font-size: 17px;
+            display: flex; /* Flexbox 사용 */
+            flex-direction: column; /* 세로 방향으로 정렬 */
+            align-items: center; /* 수직 가운데 정렬 추가 */
+            transition: background-color 0.3s; /* 변화를 부드럽게 만들기 위한 트랜지션 설정 */
+        }
+
+        #bottomNavbar a.active {
+            background-color: #ddd;
+            color: black;
+        }
+
+        #bottomNavbar a:hover {
+            background-color: #555; /* 마우스 호버 시 배경색 변경 */
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        #profileContainer {
+            margin: 50px auto;
+            text-align: center;
+        }
+
+        #profileImage {
+            margin: 50px auto;
+            text-align: center;
+            width: 150px; /* 프로필 이미지의 너비 */
+            height: 150px; /* 프로필 이미지의 높이 */
+            border-radius: 50%; /* 모서리를 둥글게 만들기 */
+            overflow: hidden; /* 넘치는 부분을 숨기기 */
+            border: 4px solid #fff; /* 테두리 추가 */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+            margin-bottom: 20px;
+            display: flex; /* Flexbox 사용 */
+            justify-content: center; /* 가로 방향 가운데 정렬 */
+            align-items: center; /* 세로 방향 가운데 정렬 */
+        }
+
+        #settingsContainer {
+        width: 300px;
+        margin: 20px auto;
+        border: 1px solid #ddd;
+        padding: 20px;
+        }
+
+        .settingItem {
+        margin-bottom: 10px;
+        }
+
+        .settingTable {
+        width: 100%;
+        border-collapse: collapse;
+        }
+
+        .settingTable td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            height:80px;
+            font-size:20px;
+        }
+
+        .settingTable a {
+            text-decoration: none;
+            color: #333;
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .settingTable a:hover {
+            background-color: #ddd;
+        }
+        .logo-container {
+            width: 300px; /* 로고 컨테이너의 너비 */
+            height: 300px; /* 로고 컨테이너의 높이 */
+            border-radius: 50%; /* 둥근 원 형태로 만듦 */
+            overflow: hidden; /* 넘치는 이미지를 숨기기 위해 overflow 속성 추가 */
+            margin: 0 auto; /* 가운데 정렬을 위한 margin 설정 */
+        }
+
+        .logo-img {
+            width: 100%; /* 로고 이미지의 너비를 100%로 설정하여 로고 컨테이너에 꽉 차게 함 */
+            height: auto; /* 비율에 맞게 높이를 자동 조정 */
+            transform: scale(1.4);
+            display: block; /* 인라인 요소가 아닌 블록 요소로 설정하여 가운데 정렬 적용 */
+            margin-top: -25px;
+        }
+        {% block style %}
+        {% endblock %}
+    </style>
+
+
 </head>
 <body>
-<!-- 기본 템플릿 안에 삽입될 내용 Start -->
-{% block content %}
 
-
-{% endblock %}
-<!-- 기본 템플릿 안에 삽입될 내용 End -->
+<div id="content">
+    {% block content %}
+    {% endblock %}
+</div>
+{% if user.is_authenticated %}
+<div id="bottomNavbar">
+    <!-- 하단 메뉴바 -->
+    <a href="/diary/main/" id="diaryBtn"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-journal-check" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M10.854 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 8.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+  <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"/>
+  <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/>
+</svg>Diary</a>
+    <a href="/report/main/" id="reportBtn"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-bar-chart-line-fill" viewBox="0 0 16 16">
+  <path d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1V2z"/>
+</svg>Report</a>
+    <a href="/setting/main/" id="settingBtn"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
+  <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+  <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
+</svg>Setting</a>
+</div>
+{% endif %}
 </body>
 </html>

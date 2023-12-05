@@ -39,12 +39,12 @@ def login_user(request):
         user = authenticate(request,email=email,password=password)
 
         if user is not None:
-            messages.success(request,'로그인 되었습니다.')
+            # messages.success(request,'로그인 되었습니다.')
             login(request,user)
             # return redirect('users:loginOK')
             goal = User.objects.filter(id=request.user.id).first()
             if goal.goal_set==0:
-                messages.error(request, '목표설정이 되어있지 않습니다, 서비스 이용을 위해서 목표 설정을 해주세요')
+                # messages.error(request, '목표설정이 되어있지 않습니다, 서비스 이용을 위해서 목표 설정을 해주세요')
                 return redirect('setting:goal')
             return redirect('diary:main')
             # return render(request, 'users/main.html')
@@ -55,7 +55,7 @@ def login_user(request):
 
 def logout_user(request):
     logout(request)
-    messages.success(request,'로그아웃 되었습니다')
+    # messages.success(request,'로그아웃 되었습니다')
     # return render(request, 'users/login.html')
     return redirect('users:login')
 

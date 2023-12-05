@@ -1,10 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-가입 OK
-</body>
-</html>
+{% extends "base.html" %}
+{% block content %}
+<div class="container my-3">
+    <div class="text-center">
+        <div class="logo-container">
+            <img src="/media/static/CaloriEZ_2.png" alt="Logo" class="logo-img">
+        </div>
+        <p></p>
+        <p></p><p></p><p></p>
+        <div class="alert alert-success" role="alert" style="font-size: 28px;">
+            회원가입이 성공적으로 완료되었습니다!
+
+            <p></p>
+            <p></p><p></p>
+            <a href="{% url 'users:login' %}">
+            <div class="d-grid gap-2">
+
+                <button class="btn btn-success">로그인창으로</button>
+
+            </div>
+        </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
