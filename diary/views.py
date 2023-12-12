@@ -1,35 +1,29 @@
-from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect, get_object_or_404
-from  django.contrib import messages
-from .models import Food
-from .models import Menu
-from .models import Photo
-from .models import User
-from setting.models import Diet,Weight
+from django.contrib import messages
+from .models import Food, Menu, Photo, User
+from setting.models import Diet, Weight
 from django.db.models import Q
 from .forms import MenuForm
 from datetime import datetime
-from django.urls import reverse
 import torch
 from django.http import JsonResponse
 from PIL import Image
-import io
 import json
 from django.utils import timezone
-from decimal import Decimal
 import numpy as np
-import ast
 import os
 from django.conf import settings
 
 # 모델 로드
 model = torch.hub.load('ultralytics/yolov5', 'custom', path='diary/weights/detect.pt')
+
+# 식사 리스트 삭제
 def delete(request):
-    menu_id = request.POST.get('menu_id','')
+    menu_id = request.POST.get('menu_id', '')
     menu = Menu.objects.get(menu_id=menu_id)
     menu.delete()
-    if request.POST.get('photo_id',''):
-        photo_id = request.POST.get('photo_id','')
+    if request.POST.get('photo_id', ''):
+        photo_id = request.POST.get('photo_id', '')
         photo = Photo.objects.get(photo_id=photo_id)
         photo.delete()
         image_path = os.path.join(settings.MEDIA_ROOT, str(photo.photo_url))
@@ -37,6 +31,7 @@ def delete(request):
             os.remove(image_path)
     return redirect('diary:main')
 
+# 식사 리스트 수정
 def detail(request):
     if request.method == 'POST':
         print(request.POST.get('menu_id', ''))
@@ -68,11 +63,9 @@ def detail(request):
 
         menu.save()
 
-
         return redirect('diary:main')
 
-
-    menu_id = request.GET.get('menu_id','')
+    menu_id = request.GET.get('menu_id', '')
     menu = Menu.objects.filter(menu_id=menu_id).first()
     photo_id = request.GET.get('photo_id', '')
     if photo_id:
@@ -86,68 +79,47 @@ def detail(request):
     initial_data = {'menu_category': menu.menu_category}
     form = MenuForm(initial_data)
 
+    context = {'menu': menu, 'photo': photo, 'food': food, 'form': form}
+    return render(request, 'diary/detail.html', context)
 
-    context = {'menu':menu,'photo':photo,'food':food,'form':form}
-    return render(request, 'diary/detail.html',context)
-
+# 식사 추천
 def recommendation(kcal_available):
     carbs = kcal_available.get('carbs')
     proteins = kcal_available.get('proteins')
     fats = kcal_available.get('fats')
     carbs = carbs / proteins
     fats = fats / proteins
-    proteins = proteins / proteins
-    print('추천!')
-    print(carbs, proteins, fats)
-
-
+    # proteins = proteins / proteins
 
 
     # 유사성 - 유클리디안 거리 계산법
     def euclidean_distance(point1, point2):
         return np.linalg.norm(np.array(point1) - np.array(point2))
 
-    # U의 좌표
+    # user의 탄수화물 지방 비율
     u_coordinates = (carbs, fats)
 
-    # 다른 개체들의 좌표 리스트
+    # 음식들의 좌표 리스트
     food_list = Food.objects.all()
-    other_objects=[]
+    other_objects = []
     for food in food_list:
         carbs = float(food.food_carbs / food.food_proteins)
         fats = float(food.food_fats / food.food_proteins)
-        other_objects.append((carbs,fats))
-    # print('리스트 비율계산')
-    # print(other_objects)
+        other_objects.append((carbs, fats))
 
     # 각 개체와 U 사이의 유클리디안 거리 계산
     distances = [euclidean_distance(u_coordinates, obj) for obj in other_objects]
 
-    # 거리가 가장 작은 개체 찾기
-    # most_similar_object_index = distances.index(min(distances))
-    # most_similar_object = other_objects[most_similar_object_index]
-    # print(f"The most similar object has coordinates: {most_similar_object}")
-    # most_similar_object = food_list[most_similar_object_index]
-    # print(f"The most similar object has coordinates: {most_similar_object}")
-    # print(most_similar_object.food_name)
-
     # 거리가 가장 작은 상위 3개 개체 찾기
     most_similar_objects_indices = sorted(range(len(distances)), key=lambda k: distances[k])[:3]
-    # most_similar_objects = [other_objects[i] for i in most_similar_objects_indices]
-    # print(f"The 3 most similar objects have coordinates: {most_similar_objects}")
     most_similar_objects = [food_list[i] for i in most_similar_objects_indices]
-    # print(f"The 3 most similar objects have coordinates: {most_similar_objects}")
-    # for object in most_similar_objects:
-    #     print(object.food_name)
-
-
-
 
     return most_similar_objects
 
-def get_menu_list(user_id,day):
+
+def get_menu_list(user_id, day):
     # 필요 - 음식 이미지 url,음식 이름, 식사종류(아점저간야), 시간, 칼로리, 탄수화물, 단백질, 지방
-    menus = Menu.objects.filter(menu_date__date=day,menu_user=user_id).order_by('menu_date')
+    menus = Menu.objects.filter(menu_date__date=day, menu_user=user_id).order_by('menu_date')
     menu_list = []
     for menu in menus:
         menu_instance = {}
@@ -175,21 +147,23 @@ def get_menu_list(user_id,day):
         print("그람수!")
         print(weight)
         category = menu.menu_category
-        if category=='1':
-            category='아침'
-        elif category =='2':
-            category='점심'
-        elif category =='3':
-            category='저녁'
-        elif category =='4':
-            category='간식'
-        elif category =='5':
-            category='야식'
+        if category == '1':
+            category = '아침'
+        elif category == '2':
+            category = '점심'
+        elif category == '3':
+            category = '저녁'
+        elif category == '4':
+            category = '간식'
+        elif category == '5':
+            category = '야식'
 
         if menu.menu_photo:
-            menu_instance = {'menu_id':menu.menu_id,'photo_id':menu.menu_photo.photo_id,'food_id':food.food_id,'foodimage':foodimage,'weight':weight,'category':category,'foodname':foodname,'time':time,'kcal':kcal,'carbs':carbs,'proteins':proteins,'fats':fats}
+            menu_instance = {'menu_id': menu.menu_id, 'photo_id': menu.menu_photo.photo_id, 'food_id': food.food_id,
+                             'foodimage': foodimage, 'weight': weight, 'category': category, 'foodname': foodname,
+                             'time': time, 'kcal': kcal, 'carbs': carbs, 'proteins': proteins, 'fats': fats}
         else:
-            menu_instance = {'menu_id': menu.menu_id,  'food_id': food.food_id,
+            menu_instance = {'menu_id': menu.menu_id, 'food_id': food.food_id,
                              'foodimage': foodimage, 'weight': weight, 'category': category,
                              'foodname': foodname, 'time': time, 'kcal': kcal, 'carbs': carbs, 'proteins': proteins,
                              'fats': fats}
@@ -197,15 +171,18 @@ def get_menu_list(user_id,day):
         menu_list.append(menu_instance)
 
     return menu_list
-def available_kcal(total,current):
 
+# 먹을 수 있는 양 계싼
+def available_kcal(total, current):
     kcal = total.get('kcal') - current.get('kcal')
     carbs = total.get('carbs') - current.get('carbs')
     proteins = total.get('proteins') - current.get('proteins')
     fats = total.get('fats') - current.get('fats')
 
-    available = {'kcal':kcal,'carbs':carbs,'proteins':proteins,'fats':fats}
+    available = {'kcal': kcal, 'carbs': carbs, 'proteins': proteins, 'fats': fats}
     return available
+
+# 하루 총 섭취한 양 계산
 def day_kcal_calc(menu_list):
     kcal = 0
     carbs = 0
@@ -218,8 +195,10 @@ def day_kcal_calc(menu_list):
         carbs += menu.get('carbs')
         proteins += menu.get('proteins')
         fats += menu.get('fats')
-    kcal_result = {'kcal':kcal,'carbs':carbs,'proteins':proteins,'fats':fats}
+    kcal_result = {'kcal': kcal, 'carbs': carbs, 'proteins': proteins, 'fats': fats}
     return kcal_result
+
+# 기초 대사량, 영양소 계산
 def kcal_calc(user_id):
     diet_list = Diet.objects.filter(diet=user_id).first()
     weight_list = Weight.objects.filter(weight_user=user_id).order_by('-weight_recorded').first()
@@ -227,36 +206,35 @@ def kcal_calc(user_id):
     weight = float(weight_list.weight_current)
     exercise = diet_list.diet_exercise
     # 하루 칼로리 섭취량 하루에 500칼로리 적게 먹는 것이 이상적
-    bmr = ((weight*10) + (height*6.25) - 230)
+    bmr = ((weight * 10) + (height * 6.25) - 230)
     carbs = 0
     proteins = 0
     fats = 0
 
-    if exercise=='1':
+    if exercise == '1':
         bmr *= 1.2
-    elif exercise=='2':
+    elif exercise == '2':
         bmr *= 1.375
-    elif exercise=='3':
+    elif exercise == '3':
         bmr *= 1.55
-    elif exercise=='4':
+    elif exercise == '4':
         bmr *= 1.725
-    elif exercise=='5':
+    elif exercise == '5':
         bmr *= 1.9
     bmr -= 500
     bmr = int(bmr)
 
     # 하루 단백질 섭취량
-    if exercise=='1':
+    if exercise == '1':
         proteins = weight * 1.2
-    elif exercise=='2':
+    elif exercise == '2':
         proteins = weight * 1.4
-    elif exercise=='3':
+    elif exercise == '3':
         proteins = weight * 1.6
-    elif exercise=='4':
+    elif exercise == '4':
         proteins = weight * 1.8
-    elif exercise=='5':
+    elif exercise == '5':
         proteins = weight * 2.0
-
 
     proteins = int(proteins)
 
@@ -264,14 +242,15 @@ def kcal_calc(user_id):
     fats = int(weight)
 
     # 하루 탄수화물 섭취량
-    carbs = (bmr - (proteins*4) - (fats*9))/4
+    carbs = (bmr - (proteins * 4) - (fats * 9)) / 4
     carbs = int(carbs)
-    print(height,weight)
+    print(height, weight)
 
-    kcal_info = {'kcal':bmr,'carbs':carbs,'proteins':proteins,'fats':fats}
+    kcal_info = {'kcal': bmr, 'carbs': carbs, 'proteins': proteins, 'fats': fats}
 
     return kcal_info
 
+# 이미지 판별
 def analyze_image(request):
     if request.method == 'POST' and request.FILES['photo']:
         # 이미지 받기
@@ -288,29 +267,29 @@ def analyze_image(request):
 
     return JsonResponse({'error': '제출된 이미지가 없습니다.'}, status=400)
 
+
 # Create your views here.
 def main(request):
-
     goal = User.objects.filter(id=request.user.id).first()
     if goal.goal_set == 0:
         messages.error(request, '목표설정이 되어있지 않습니다, 서비스 이용을 위해서 목표 설정을 해주세요')
         return redirect('setting:goal')
-    
+
     # 데이터를 위한 날짜설정
     today = datetime.now().date().strftime('%Y-%m-%d')
 
     # 비교용 오늘 날짜
     date = datetime.now().date().strftime('%Y-%m-%d')
 
-
-    if request.GET.get('today',''):
-        today = request.GET.get('today','')
+    if request.GET.get('today', ''):
+        today = request.GET.get('today', '')
         # search_today = timezone.datetime(today)
     user_id = request.user.id
     user_instance = User.objects.get(id=user_id)
 
-    if request.method=='POST':
-        Weight.objects.create(weight_current=request.POST.get('today_weight',None), weight_recorded=timezone.now(), weight_user=user_instance)
+    if request.method == 'POST':
+        Weight.objects.create(weight_current=request.POST.get('today_weight', None), weight_recorded=timezone.now(),
+                              weight_user=user_instance)
 
     record = Weight.objects.filter(weight_user=request.user, weight_recorded__date=today).order_by(
         '-weight_recorded').first()
@@ -326,27 +305,26 @@ def main(request):
 
     menu_list = get_menu_list(user_id, today)
 
-    print("그람수!!!")
+
     for i in menu_list:
         print(i.get('weight'))
-
-    # menu_list = Menu.objects.filter(menu_date__date=today,menu_user=user_id).order_by('menu_date')
-    # 이 메뉴리스트로 DB에서 불러와서 사진, 각종 정보들을 정확하게 다시 만들어서 보내주게 추가 작업 필요
 
     # 영양소 칼로리 계산
     kcal_info = kcal_calc(user_instance)
     # 하루 섭취한 영양소 칼로리 계산
     kcal_result = day_kcal_calc(menu_list)
-    kcal_available = available_kcal(kcal_info,kcal_result)
+    # 섭취 가능한 영양소 칼로리 계산
+    kcal_available = available_kcal(kcal_info, kcal_result)
+    # 추천 음식
     recommendation_list = recommendation(kcal_available)
 
-    context = {'menu_list': menu_list, 'today': today,'date':date, 'body':body,'kcal_info':kcal_info,'kcal_result':kcal_result,'kcal_available':kcal_available,'recommendation_list':recommendation_list}
-
-
+    context = {'menu_list': menu_list, 'today': today, 'date': date, 'body': body, 'kcal_info': kcal_info,
+               'kcal_result': kcal_result, 'kcal_available': kcal_available, 'recommendation_list': recommendation_list}
 
     return render(request, 'diary/main.html', context)
 
 
+# 검색
 def search(request):
     print("실행")
     if request.session.get('photo_info', {}):
@@ -359,12 +337,6 @@ def search(request):
 
         print(photo_url)
         print(photo_id)
-        # 이미지 분석
-        # image = "/media/"+ photo_url
-        # image = "/media/images/apple_bU4ubn1.jpg"
-        # image = Image.open(image)
-        # results = model(image)
-        # print(results)
 
 
         food_list = Food.objects.order_by('food_name')
@@ -373,43 +345,51 @@ def search(request):
 
         if request.session.get('food_name', {}):
             food_name = request.session.get('food_name', {})
-            if food_name=='sagwa':
+            if food_name == 'sagwa':
                 kw = '사과'
+            elif food_name == 'bltsaendeuwichi':
+                kw = 'blt샌드위치'
+            elif food_name == 'ssalgugsu':
+                kw = '쌀국수'
+            elif food_name == 'geulatang':
+                kw = '그라탕'
+            elif food_name == 'dalg-gaseumsal':
+                kw = '닭가슴살'
+            elif food_name == 'bibimbab':
+                kw = '비빔밥'
+            elif food_name == 'bibimbap':
+                kw = '비빔밥'
+            elif food_name == 'mulberry':
+                kw = '건크랜베리'
+            elif food_name == 'goguma':
+                kw = '찐고구마'
+            elif food_name == 'salmon_salad':
+                kw = '연어샐러드'
+            elif food_name == 'ham_sandwich':
+                kw = '햄샌드위치'
             del request.session['food_name']
 
         if kw:
             food_list = food_list.filter(
                 Q(food_name__icontains=kw)
             ).distinct()
-        # context = {'food_list': food_list, 'photo': {'photo_id': photo_id, 'photo_url': photo_url}}
+
         context = {'food_list': food_list, 'photo': new_photo}
-        return render(request,'diary/search.html',context)
+
+        return render(request, 'diary/search.html', context)
+
     else:
         food_list = Food.objects.order_by('food_name')
         kw = request.GET.get('kw', '')
-        # if request.GET.get('foodname','')
-        #     kw = request.GET.get('foodname', '')
+
         if kw:
             food_list = food_list.filter(
                 Q(food_name__icontains=kw)
             ).distinct()
-        # context = {'food_list': food_list, 'photo': {'photo_id': photo_id, 'photo_url': photo_url}}
+
         context = {'food_list': food_list}
         return render(request, 'diary/search.html', context)
 
-# def photo(request):
-#     if request.method == 'POST':
-#         photo_info = Photo()
-#         photo_info.photo_url = request.FILES['photo']
-#         photo_info.save()
-#         # AI 모델으로 음식 이름 빼와서 context에 추가해서 search에서 받을 수 있게 해줘야함
-#         # foodname
-#         context = {'photo':photo_info}
-#
-#         return render(request, 'diary/search.html', context)
-#
-#
-#     return render(request,'diary/photo.html')
 
 def photo(request):
     if request.method == 'POST':
@@ -417,9 +397,6 @@ def photo(request):
         photo_info = Photo()
         photo_info.photo_url = request.FILES['photo']
         photo_info.save()
-        # AI 모델으로 음식 이름 빼와서 context에 추가해서 search에서 받을 수 있게 해줘야함
-        # foodname
-        # context = {'photo':photo_info}
         result = analyze_image(request)
         result = json.loads(result)
         # result가 리스트인 경우
@@ -432,17 +409,18 @@ def photo(request):
         else:
             # result가 리스트가 아닌 경우 그대로 사용합니다.
             result = result.get('name', None)
-        print(result)
+
+
         request.session['photo_info'] = {'photo_url': str(photo_info.photo_url), 'photo_id': photo_info.photo_id}
         request.session['food_name'] = result
 
         return redirect('diary:search')
 
+    return render(request, 'diary/photo.html')
 
-    return render(request,'diary/photo.html')
+
 def meal(request, food_id):
-
-    food = Food.objects.get(food_id = food_id)
+    food = Food.objects.get(food_id=food_id)
     photo_id = request.GET.get('photo_id', None)
 
     if photo_id:
@@ -452,7 +430,7 @@ def meal(request, food_id):
         # photo_id가 없을 경우 기본값으로 설정하거나 다른 로직 수행
         photo_list = None
 
-    context={'food':food,'photo':photo_list}
+    context = {'food': food, 'photo': photo_list}
     form = MenuForm()
 
     photo_list = Photo.objects
@@ -478,24 +456,17 @@ def meal(request, food_id):
             # 'photo_info' 키가 없는 경우 처리할 내용
             pass
 
-
         if form.is_valid():
 
             # 폼이 유효한 경우, 데이터를 저장하거나 다른 작업을 수행할 수 있습니다.
             form.save()
-            # return redirect('success_page')  # 저장이 성공했을 때 이동할 페이지로 리다이렉트
+
             return redirect('diary:main')
 
         else:
             print("error")
 
-    # if request.method == 'POST':
-    #     form = MenuForm(request.POST)
-    #     if form.is_valid():
-    #         # 폼이 유효하면 필요한 작업을 수행
-    #         image = request.POST.get('image')
-    #         # 다른 처리 로직을 여기에 추가
-    #         context = {'food': food, 'image': image}
-    #         return render(request, 'diary/meal.html', context)
+
     context['form'] = form
-    return render(request,'diary/meal.html',context)
+    
+    return render(request, 'diary/meal.html', context)

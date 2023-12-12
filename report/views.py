@@ -1,6 +1,8 @@
-from django.shortcuts import render,redirect
-from  django.contrib import messages
+from django.shortcuts import render, redirect
+from django.contrib import messages
 from users.models import User
+
+
 # Create your views here.
 
 def main(request):

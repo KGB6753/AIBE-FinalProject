@@ -1,14 +1,13 @@
 from django import forms
-from .models import User,Diet,Weight
+from .models import User, Diet, Weight
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
+
 
 class GoalForm(forms.ModelForm):
     class Meta:
         model = Diet
-        fields = ['diet','diet_start_weight','diet_target_weight','diet_exercise','diet_user_height']
-
-
+        fields = ['diet', 'diet_start_weight', 'diet_target_weight', 'diet_exercise', 'diet_user_height']
 
     def save(self, commit=True):
         diet = self.cleaned_data['diet']
@@ -47,9 +46,8 @@ class GoalForm(forms.ModelForm):
 
 
 class BodyForm(forms.ModelForm):
-    weight_current = forms.DecimalField(max_digits=4,decimal_places=1)
+    weight_current = forms.DecimalField(max_digits=4, decimal_places=1)
+
     class Meta:
         model = Diet
-        fields = ['diet_exercise','diet_user_height']
-
-
+        fields = ['diet_exercise', 'diet_user_height']

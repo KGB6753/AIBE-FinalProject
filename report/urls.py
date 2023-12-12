@@ -3,7 +3,7 @@ from django.contrib.auth import views as auth_views
 # from .forms import CustomAuthenticationForm
 from . import views
 
-app_name='report'
+app_name = 'report'
 
 urlpatterns = [
     path('main/', views.main, name='main'),

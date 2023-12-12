@@ -1,177 +1,119 @@
 {% extends "base.html" %}
 {% block style %}
-        #diaryBtn {
-    background-color: #555;
-    color: black;
+#diaryBtn {
+background-color: #555;
+color: black;
 }
 /* 이미지 컨테이너 스타일 */
 .image-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 20px 0; /* 원하는 여백 크기로 조절 */
-    overflow: hidden; /* 이미지가 테두리를 넘어가지 않도록 처리 */
+display: flex;
+align-items: center;
+justify-content: center;
+margin: 20px 0; /* 원하는 여백 크기로 조절 */
+overflow: hidden; /* 이미지가 테두리를 넘어가지 않도록 처리 */
 }
 /* 이미지 스타일 */
 .image-container img {
-    max-width: 100%; /* 이미지가 컨테이너를 넘어가지 않도록 최대 너비 설정 */
-    height: auto; /* 가로세로 비율 유지 */
-    border-radius: 10px; /* 라운딩 처리 */
+max-width: 100%; /* 이미지가 컨테이너를 넘어가지 않도록 최대 너비 설정 */
+height: auto; /* 가로세로 비율 유지 */
+border-radius: 10px; /* 라운딩 처리 */
 }
 /* 이미지 컨테이너 스타일 */
 .food-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 20px 0; /* 원하는 여백 크기로 조절 */
-    border: 1px solid #ccc; /* 테두리 선 추가 */
-    border-radius: 10px; /* 라운딩 처리 */
-    overflow: hidden; /* 이미지가 테두리를 넘어가지 않도록 처리 */
+display: flex;
+align-items: center;
+justify-content: center;
+margin: 20px 0; /* 원하는 여백 크기로 조절 */
+border: 1px solid #ccc; /* 테두리 선 추가 */
+border-radius: 10px; /* 라운딩 처리 */
+overflow: hidden; /* 이미지가 테두리를 넘어가지 않도록 처리 */
 }
 .card-body {
-    display: flex;
-    justify-content: space-around;
+display: flex;
+justify-content: space-around;
 }
 .custom-header {
-    background-color: #B7F0B1;  /* card-header의 배경색과 동일하게 설정하세요 */
-    border-radius: 10px;  /* 라운드 처리를 위한 값, 필요에 따라 조절하세요 */
-    padding: 10px;  /* 적절한 여백 설정 */
-    border: 1px solid #ccc; /* 테두리 선 추가 */
-    border-radius: 10px; /* 라운딩 처리 */
-    color: black;  /* 글자색, card-header와 대비를 갖게 설정하세요 */
-    text-align: center; /* 텍스트를 가운데 정렬합니다. */
-    margin-top : 60px;
+background-color: #B7F0B1;  /* card-header의 배경색과 동일하게 설정하세요 */
+border-radius: 10px;  /* 라운드 처리를 위한 값, 필요에 따라 조절하세요 */
+padding: 10px;  /* 적절한 여백 설정 */
+border: 1px solid #ccc; /* 테두리 선 추가 */
+border-radius: 10px; /* 라운딩 처리 */
+color: black;  /* 글자색, card-header와 대비를 갖게 설정하세요 */
+text-align: center; /* 텍스트를 가운데 정렬합니다. */
+margin-top : 60px;
 }
 
-    /* changeDay 폼 스타일 */
-    #changeDay {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin: 20px auto; /* 원하는 여백 크기로 조절 */
-        padding: 20px;
-        background-color: #ffffff; /* 배경색 설정 */
-        border-radius: 10px; /* 라운딩 처리 */
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
-    }
+/* changeDay 폼 스타일 */
+#changeDay {
+display: flex;
+flex-direction: column;
+align-items: center;
+margin: 20px auto; /* 원하는 여백 크기로 조절 */
+padding: 20px;
+background-color: #ffffff; /* 배경색 설정 */
+border-radius: 10px; /* 라운딩 처리 */
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+}
 
-    #changeDay input[type="date"] {
-        margin-bottom: 10px; /* 입력 필드 아래 간격 조절 */
-        height: 35px;
-    }
+#changeDay input[type="date"] {
+margin-bottom: 10px; /* 입력 필드 아래 간격 조절 */
+height: 35px;
+}
 
-    #changeDay button {
-        height: 35px; /* 높이 조절 */
-        background-color: #007bff; /* 버튼 배경색 설정 */
-        color: #ffffff; /* 버튼 글자색 설정 */
-        border: none;
-        padding: 5px 10px; /* 상하 여백 조절 */
-        font-size: 16px;
-        cursor: pointer;
-        border-radius: 5px;
-        transition: background-color 0.3s; /* 변화를 부드럽게 만들기 위한 트랜지션 설정 */
-    }
-
-
-    #changeDay button:hover {
-        background-color: #0056b3; /* 마우스 호버 시 배경색 변경 */
-    }
-
-<!--    /* 추가된 스타일 */-->
-<!--    #changeDayContainer {-->
-<!--        display: flex;-->
-<!--        justify-content: flex-end;-->
-<!--        align-items: center;-->
-<!--        margin-right: 20px; /* 우측 여백 조절 */-->
-<!--    }-->
-
-<!--    /* 변경된 폼 스타일 */-->
-<!--    #changeDay form {-->
-<!--        display: flex;-->
-<!--        align-items: center;-->
-<!--    }-->
-
-<!--    #changeDay input[type="date"] {-->
-<!--        margin-right: 10px; /* 입력 필드 오른쪽 여백 조절 */-->
-<!--        height: 35px;-->
-<!--    }-->
-
-<!--    #changeDay button {-->
-<!--        height: 35px;-->
-<!--        background-color: #007bff;-->
-<!--        color: #ffffff;-->
-<!--        border: none;-->
-<!--        padding: 5px 10px;-->
-<!--        font-size: 16px;-->
-<!--        cursor: pointer;-->
-<!--        border-radius: 5px;-->
-<!--        transition: background-color 0.3s;-->
-<!--    }-->
-
-<!--    #changeDay button:hover {-->
-<!--        background-color: #0056b3;-->
-<!--    }-->
+#changeDay button {
+height: 35px; /* 높이 조절 */
+background-color: #007bff; /* 버튼 배경색 설정 */
+color: #ffffff; /* 버튼 글자색 설정 */
+border: none;
+padding: 5px 10px; /* 상하 여백 조절 */
+font-size: 16px;
+cursor: pointer;
+border-radius: 5px;
+transition: background-color 0.3s; /* 변화를 부드럽게 만들기 위한 트랜지션 설정 */
+}
 
 
+#changeDay button:hover {
+background-color: #0056b3; /* 마우스 호버 시 배경색 변경 */
+}
 
 
-<!--        /* 진행도 막대 스타일 */-->
-<!--    #weightProgress {-->
-<!--        display: flex;-->
-<!--        justify-content: space-around;-->
-<!--        margin-top: 20px;-->
-<!--        width: 100%;-->
-<!--    }-->
+#weightProgress {
+margin-top : 20px;
+width: 100%;
+}
 
-<!--    .progressItem {-->
-<!--        text-align: center;-->
-<!--        width: 100%;-->
-<!--    }-->
+.progressItem {
+margin-bottom: 20px;
+}
 
-<!--    .progress-bar {-->
-<!--        font-size: 14px;-->
-<!--    }-->
+.progress {
+position: relative;
+height: 20px;
+background-color: #ecf0f1; /* 그래프 전체의 배경색 설정 */
+}
 
-        #weightProgress {
-            margin-top : 20px;
-            width: 100%;
-        }
+.progress-bar {
 
-        .progressItem {
-            margin-bottom: 20px;
-        }
+height: 100%;
+background-color: #3498db;
+}
 
-        .progress {
-            position: relative;
-            height: 20px;
-            background-color: #ecf0f1; /* 그래프 전체의 배경색 설정 */
-        }
+.text-labels {
+position: absolute;
+top: 0;
+left: 50%;
+transform: translateX(-50%);
+display: flex;
+justify-content: space-between;
+width: 100%;
+}
 
-        .progress-bar {
-
-            height: 100%;
-            background-color: #3498db;
-        }
-
-        .text-labels {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-        }
-
-        .text-labels p {
-            margin: 0;
-            font-size: 12px;
-            color: #333;
-        }
-
-
-
-
+.text-labels p {
+margin: 0;
+font-size: 12px;
+color: #333;
+}
 
 
 {% endblock%}
@@ -185,32 +127,33 @@
 </nav>
 
 {% if user.is_authenticated %}
-    <div id="changeDay">
-        <form  method="get" action="{% url 'diary:main' %}">
+<div id="changeDay">
+    <form method="get" action="{% url 'diary:main' %}">
 
-            <input type="date" name="today" value="{{today}}" style="text-align: center;">
-            <button type="submit">날짜변경</button>
-        </form>
+        <input type="date" name="today" value="{{today}}" style="text-align: center;">
+        <button type="submit">날짜변경</button>
+    </form>
 
-        {% if date == today %}
+    {% if date == today %}
 
-                <div id="weightProgress">
-                    <div id="startWeight" class="progressItem">
-                        <div class="progress-label" style="text-align:center;">체중관리 진행도</div>
-                        <div class="progress">
-                            <div id="startWeightBar" class="progress-bar" role="progressbar" aria-valuenow="{{ body.start_weight }}" aria-valuemin="0" aria-valuemax="{{ body.target_weight }}"></div>
-                            <!-- 그래프 내부에 시작 체중과 목표 체중 표시 -->
-                            <div class="text-labels">
-                                <p>{{ body.start_weight }}kg</p>
-                                <p id="progressP">{{ body.start_weight }}kg</p>
-                                <p>{{ body.target_weight }}kg</p>
-                            </div>
-                        </div>
-                    </div>
-
+    <div id="weightProgress">
+        <div id="startWeight" class="progressItem">
+            <div class="progress-label" style="text-align:center;">체중관리 진행도</div>
+            <div class="progress">
+                <div id="startWeightBar" class="progress-bar" role="progressbar" aria-valuenow="{{ body.start_weight }}"
+                     aria-valuemin="0" aria-valuemax="{{ body.target_weight }}"></div>
+                <!-- 그래프 내부에 시작 체중과 목표 체중 표시 -->
+                <div class="text-labels">
+                    <p>{{ body.start_weight }}kg</p>
+                    <p id="progressP">{{ body.start_weight }}kg</p>
+                    <p>{{ body.target_weight }}kg</p>
                 </div>
+            </div>
+        </div>
 
-                <script>
+    </div>
+
+    <script>
                     // 진행도를 계산하고 업데이트하는 함수
                     function updateProgress(weight, targetWeight, startWeight, elementId) {
                         var progress = ((startWeight-weight) / (startWeight-targetWeight)) * 100;
@@ -224,165 +167,125 @@
                     updateProgress({{ body.current_weight }}, {{ body.target_weight }},{{ body.start_weight }}, 'startWeight');
 
 
-                </script>
+
+    </script>
 
 
-            <form id="changeWeight" method="post" action="{% url 'diary:main' %}">
-                오늘의 몸무게
-                {% csrf_token %}
-                <input type="number" name="today_weight" step="0.1" min="0" max="999" value="{{body.current_weight}}" style="text-align: center;">kg
-                <button type="submit">체중 입력</button>
-            </form>
-            {% else %}
-            <!--오늘이 아닌 날을 볼때sss-->
-                {{ today }} 의 몸무게 : {{body.current_weight}}(kg)
-        {% endif %}
-    </div>
-    {% if date == today %}
-    <div class="d-grid gap-2">
-        <a id="recordTodayBtn" href="{% url 'diary:search' %}"><button type="button" class="btn btn-primary w-100">오늘의 식사 기록하기</button></a>
-    </div>
+    <form id="changeWeight" method="post" action="{% url 'diary:main' %}">
+        오늘의 몸무게
+        {% csrf_token %}
+        <input type="number" name="today_weight" step="0.1" min="0" max="999" value="{{body.current_weight}}"
+               style="text-align: center;">kg
+        <button type="submit">체중 입력</button>
+    </form>
+    {% else %}
+    <!--오늘이 아닌 날을 볼때sss-->
+    {{ today }} 의 몸무게 : {{body.current_weight}}(kg)
     {% endif %}
+</div>
+{% if date == today %}
+<div class="d-grid gap-2">
+    <a id="recordTodayBtn" href="{% url 'diary:search' %}">
+        <button type="button" class="btn btn-primary w-100">오늘의 식사 기록하기</button>
+    </a>
+</div>
+{% endif %}
 
-<!--    <p>식사 종합</p>-->
-<!--        <ul> 하루 섭취 가능한 칼로리 및 영양-->
-<!--            <li>칼로리 = {{kcal_info.kcal}}</li>-->
-<!--            <li>탄수화물 = {{kcal_info.carbs}}</li>-->
-<!--            <li>단백질 = {{kcal_info.proteins}}</li>-->
-<!--            <li>지방 = {{kcal_info.fats}}</li>-->
-<!--        </ul>-->
-<!--        <ul> 섭취한 칼로리 및 영양-->
-<!--            <li>칼로리 = {{kcal_result.kcal}}</li>-->
-<!--            <li>탄수화물 = {{kcal_result.carbs}}</li>-->
-<!--            <li>단백질 = {{kcal_result.proteins}}</li>-->
-<!--            <li>지방 = {{kcal_result.fats}}</li>-->
-<!--        </ul>-->
-<!--        <ul> 섭취 가능한 칼로리 및 영양-->
-<!--            <li>칼로리 = {{kcal_available.kcal}}</li>-->
-<!--            <li>탄수화물 = {{kcal_available.carbs}}</li>-->
-<!--            <li>단백질 = {{kcal_available.proteins}}</li>-->
-<!--            <li>지방 = {{kcal_available.fats}}</li>-->
-<!--        </ul>-->
+
 <p></p>
 <table class="table">
     <thead>
-        <tr>
-            <th colspan="5" style="text-align:center">식사 종합</th>
-        </tr>
-        <tr>
-            <th>영양 정보</th>
-            <th>탄수화물</th>
-            <th>단백질</th>
-            <th>지방</th>
-            <th>칼로리</th>
-        </tr>
+    <tr>
+        <th colspan="5" style="text-align:center">식사 종합</th>
+    </tr>
+    <tr>
+        <th>영양 정보</th>
+        <th>탄수화물</th>
+        <th>단백질</th>
+        <th>지방</th>
+        <th>칼로리</th>
+    </tr>
     </thead>
     <tbody>
-        <tr>
-            <td>섭취 가능량</td>
-            <td>{{kcal_info.carbs}}g</td>
-            <td>{{kcal_info.proteins}}g</td>
-            <td>{{kcal_info.fats}}g</td>
-            <td>{{kcal_info.kcal}}kcal</td>
-        </tr>
-        <tr>
-            <td>총 섭취량</td>
-            <td>{{kcal_result.carbs}}g</td>
-            <td>{{kcal_result.proteins}}g</td>
-            <td>{{kcal_result.fats}}g</td>
-            <td>{{kcal_result.kcal}}kcal</td>
-        </tr>
-        <tr>
-            <td class="table-active">섭취 가능량</td>
-            <td class="table-active">{{kcal_available.carbs}}g</td>
-            <td class="table-active">{{kcal_available.proteins}}g</td>
-            <td class="table-active">{{kcal_available.fats}}g</td>
-            <td class="table-active">{{kcal_available.kcal}}kcal</td>
-        </tr>
+    <tr>
+        <td>기초 영양소</td>
+        <td>{{kcal_info.carbs}}g</td>
+        <td>{{kcal_info.proteins}}g</td>
+        <td>{{kcal_info.fats}}g</td>
+        <td>{{kcal_info.kcal}}kcal</td>
+    </tr>
+    <tr>
+        <td>총 섭취량</td>
+        <td>{{kcal_result.carbs}}g</td>
+        <td>{{kcal_result.proteins}}g</td>
+        <td>{{kcal_result.fats}}g</td>
+        <td>{{kcal_result.kcal}}kcal</td>
+    </tr>
+    <tr>
+        <td class="table-active">섭취 가능량</td>
+        <td class="table-active">{{kcal_available.carbs}}g</td>
+        <td class="table-active">{{kcal_available.proteins}}g</td>
+        <td class="table-active">{{kcal_available.fats}}g</td>
+        <td class="table-active">{{kcal_available.kcal}}kcal</td>
+    </tr>
 
     </tbody>
 </table>
-    {% if date == today %}
-    <div class="alert alert-success" role="alert">
-      추천 식사
-    </div>
-<!--        {% if recommendation_list %}-->
-<!--            {%  for recommendation in recommendation_list %}-->
-<!--            <ul> {{recommendation.food_name}}-->
-<!--                <li>1인분 = {{recommendation.food_weight}}g</li>-->
-<!--                <li>칼로리 = {{recommendation.food_kcal}}kcal</li>-->
-<!--                <li>탄수화물 = {{recommendation.food_carbs}}g</li>-->
-<!--                <li>단백질 = {{recommendation.food_proteins}}g</li>-->
-<!--                <li>지방 = {{recommendation.food_fats}}g</li>-->
-<!--                {% if kcal_available.kcal and recommendation.food_kcal %}-->
-<!--                    <script>-->
-<!--                        function calculateServing() {-->
-<!--                          var serving = {{ kcal_available.kcal }} / {{ recommendation.food_kcal }};-->
-<!--                          var serving_g = serving * {{ recommendation.food_weight }};-->
-<!--                          return serving.toFixed(1);  // 소수점 1자리로 제한-->
-<!--                          }-->
-<!--                        function calculateServing_g() {-->
-<!--                          var serving = {{ kcal_available.kcal }} / {{ recommendation.food_kcal }};-->
-<!--                          var serving_g = serving * {{ recommendation.food_weight }};-->
-<!--                          return serving_g.toFixed(1);  // 소수점 1자리로 제한-->
-<!--                          }-->
+{% if date == today %}
+<div class="alert alert-success" role="alert">
+    추천 식사
+</div>
 
-<!--                         document.write('<li>섭취가능: ' + calculateServing() + '인분('+ calculateServing_g() +')g까지</li>');-->
-<!--                    </script>-->
-<!--                {% endif %}-->
-<!--            </ul>-->
-<!--            {% endfor %}-->
-<!--        {% endif %}-->
-        {% if recommendation_list %}
-            {%  for recommendation in recommendation_list %}
-            <div class="card text-center" style="margin-bottom:10px">
-                <div class="card-header">
-                    {{ recommendation.food_name }}
-                </div>
-                <div class="card-body row justify-content-center">
-                    <div class="card text-center col">
-                        <div class="card-header text-nowrap text-center" style="margin-left: -14px;width:75px;font-size:13px;">
-                            섭취량
-                        </div>
-                        <div class="card-body text-center">
-                            {{recommendation.food_weight}}g
-                        </div>
-                    </div>
-                    <div class="card text-center col">
-                        <div class="card-header text-nowrap text-center" style="margin-left: -14px;width:75px;font-size:13px;">
-                            칼로리
-                        </div>
-                        <div class="card-body text-center">
-                            {{recommendation.food_kcal}}kcal
-                        </div>
-                    </div>
-                    <div class="card text-center col">
-                        <div class="card-header text-nowrap text-center" style="margin-left: -14px;width:75px;font-size:13px;">
-                            탄수화물
-                        </div>
-                        <div class="card-body text-center">
-                            {{recommendation.food_carbs}}g
-                        </div>
-                    </div>
-                    <div class="card text-center col">
-                        <div class="card-header text-nowrap text-center" style="margin-left: -14px;width:75px;font-size:13px;">
-                            단백질
-                        </div>
-                        <div class="card-body text-center">
-                            {{recommendation.food_proteins}}g
-                        </div>
-                    </div>
-                    <div class="card text-center col">
-                        <div class="card-header text-nowrap text-center" style="margin-left: -14px;width:75px;font-size:13px;">
-                            지방
-                        </div>
-                        <div class="card-body text-center">
-                            {{recommendation.food_fats}}g
-                        </div>
-                    </div>
-                </div>
-                {% if kcal_available.kcal and recommendation.food_kcal %}
-                    <script>
+{% if recommendation_list %}
+{%  for recommendation in recommendation_list %}
+<div class="card text-center" style="margin-bottom:10px">
+    <div class="card-header">
+        {{ recommendation.food_name }}
+    </div>
+    <div class="card-body row justify-content-center">
+        <div class="card text-center col">
+            <div class="card-header text-nowrap text-center" style="margin-left: -14px;width:75px;font-size:13px;">
+                섭취량
+            </div>
+            <div class="card-body text-center">
+                {{recommendation.food_weight}}g
+            </div>
+        </div>
+        <div class="card text-center col">
+            <div class="card-header text-nowrap text-center" style="margin-left: -14px;width:75px;font-size:13px;">
+                칼로리
+            </div>
+            <div class="card-body text-center">
+                {{recommendation.food_kcal}}kcal
+            </div>
+        </div>
+        <div class="card text-center col">
+            <div class="card-header text-nowrap text-center" style="margin-left: -14px;width:75px;font-size:13px;">
+                탄수화물
+            </div>
+            <div class="card-body text-center">
+                {{recommendation.food_carbs}}g
+            </div>
+        </div>
+        <div class="card text-center col">
+            <div class="card-header text-nowrap text-center" style="margin-left: -14px;width:75px;font-size:13px;">
+                단백질
+            </div>
+            <div class="card-body text-center">
+                {{recommendation.food_proteins}}g
+            </div>
+        </div>
+        <div class="card text-center col">
+            <div class="card-header text-nowrap text-center" style="margin-left: -14px;width:75px;font-size:13px;">
+                지방
+            </div>
+            <div class="card-body text-center">
+                {{recommendation.food_fats}}g
+            </div>
+        </div>
+    </div>
+    {% if kcal_available.kcal and recommendation.food_kcal %}
+    <script>
                         function calculateServing() {
                           var serving = {{ kcal_available.kcal }} / {{ recommendation.food_kcal }};
                           var serving_g = serving * {{ recommendation.food_weight }};
@@ -395,148 +298,101 @@
                           }
 
                          document.write('섭취가능: ' + calculateServing() + '인분('+ calculateServing_g() +')g까지');
-                    </script>
-                {% endif %}
-                <p></p>
-            </div>
-            {% endfor %}
-        {% endif %}
+
+    </script>
     {% endif %}
-    <div class="alert alert-primary" role="alert" style="margin-bottom:-50px;margin-top:50px">
-        식사 리스트
-    </div>
-    {% if menu_list %}
-        {% for menu in menu_list %}
-            <div class="custom-header">
-                {{ menu.category }} : {{ menu.time }}
-            </div>
+    <p></p>
+</div>
+{% endfor %}
+{% endif %}
+{% endif %}
+<div class="alert alert-primary" role="alert" style="margin-bottom:-50px;margin-top:50px">
+    식사 리스트
+</div>
+{% if menu_list %}
+{% for menu in menu_list %}
+<div class="custom-header">
+    {{ menu.category }} : {{ menu.time }}
+</div>
 
-            {% if menu.foodimage %}
-                <div class="image-container">
-                    <img src="{{menu.foodimage.url}}" alt="Uploaded Photo">
-                </div>
-            {% else %}
-                <div class="image-container">
-                    <img src="/media/static/noimage.jpg" alt="Uploaded Photo">
-                </div>
-            {% endif %}
-
-            <div class="card text-center">
-                <div class="card-header">
-                    {{ menu.foodname }}
-                </div>
-                <div class="card-body row justify-content-center">
-                    <div class="card text-center col">
-                        <div class="card-header text-nowrap text-center" style="margin-left: -14px;width:75px;font-size:13px;">
-                            섭취량
-                        </div>
-                        <div class="card-body text-center">
-                            {{menu.weight}}g
-                        </div>
-                    </div>
-                    <div class="card text-center col">
-                        <div class="card-header text-nowrap text-center" style="margin-left: -14px;width:75px;font-size:13px;">
-                            칼로리
-                        </div>
-                        <div class="card-body text-center">
-                            {{ menu.kcal }}kcal
-                        </div>
-                    </div>
-                    <div class="card text-center col">
-                        <div class="card-header text-nowrap text-center" style="margin-left: -14px;width:75px;font-size:13px;">
-                            탄수화물
-                        </div>
-                        <div class="card-body text-center">
-                            {{ menu.carbs }}g
-                        </div>
-                    </div>
-                    <div class="card text-center col">
-                        <div class="card-header text-nowrap text-center" style="margin-left: -14px;width:75px;font-size:13px;">
-                            단백질
-                        </div>
-                        <div class="card-body text-center">
-                            {{ menu.proteins }}g
-                        </div>
-                    </div>
-                    <div class="card text-center col">
-                        <div class="card-header text-nowrap text-center" style="margin-left: -14px;width:75px;font-size:13px;">
-                            지방
-                        </div>
-                        <div class="card-body text-center">
-                            {{ menu.fats }}g
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <form id="detail" method="get" action="{% url 'diary:detail' %}">
-               <input type="hidden" name="menu_id" value="{{menu.menu_id}}">
-              <input type="hidden" name="photo_id" value="{{menu.photo_id}}">
-                <input type="hidden" name="food_id" value="{{menu.food_id}}">
-                <div class="d-grid gap-2">
-            <button type="submit" class="btn btn-primary">수정</button>
-                    </div>
-       </form>
-
-
-
-
-
-<!--        <ul>-->
-<!--            <li>{{ menu.category }} : {{ menu.time }} </li>-->
-<!--            {% if menu.foodimage %}-->
-<!--                <li><img src="{{menu.foodimage.url}}"></li>-->
-<!--            {% else %}-->
-<!--                <li><img src="/media/static/noimage.jpg"></li>-->
-<!--            {% endif %}-->
-<!--            <li>{{ menu.foodname }}</li>-->
-<!--            <li>섭취량 : {{menu.weight}}g</li>-->
-<!--            <li>칼로리 : {{ menu.kcal }}kcal</li>-->
-<!--            <li>탄수화물 : {{ menu.carbs }}g</li>-->
-<!--            <li>단백질 : {{ menu.proteins }}g</li>-->
-<!--            <li>지방 : {{ menu.fats }}g</li>-->
-<!--            <li><form id="detail" method="get" action="{% url 'diary:detail' %}">-->
-<!--                <input type="hidden" name="menu_id" value="{{menu.menu_id}}">-->
-<!--                <input type="hidden" name="photo_id" value="{{menu.photo_id}}">-->
-<!--                <input type="hidden" name="food_id" value="{{menu.food_id}}">-->
-<!--            <button type="submit">수정</button>-->
-<!--        </form></a></li>-->
-<!--        </ul>-->
-        {% endfor %}
-
-    {% else %}
-        <div class="alert alert-warning" role="alert" style="margin-top:60px">
-            식사 기록이 없습니다.
-        </div>
-    {% endif %}
-
+{% if menu.foodimage %}
+<div class="image-container">
+    <img src="{{menu.foodimage.url}}" alt="Uploaded Photo">
+</div>
 {% else %}
-    <p>로그인이 필요합니다.</p>
+<div class="image-container">
+    <img src="/media/static/noimage.jpg" alt="Uploaded Photo">
+</div>
 {% endif %}
 
-<!--<script>-->
-<!--    $(document).ready(function(){-->
-<!--    // 달력에서 날짜를 클릭하는 이벤트 처리-->
-<!--    $('input[type="date"]').on('change', function(){-->
-<!--        var selectedDate = $(this).val();-->
-<!--        console.log("Selected date:", selectedDate);-->
+<div class="card text-center">
+    <div class="card-header">
+        {{ menu.foodname }}
+    </div>
+    <div class="card-body row justify-content-center">
+        <div class="card text-center col">
+            <div class="card-header text-nowrap text-center" style="margin-left: -14px;width:75px;font-size:13px;">
+                섭취량
+            </div>
+            <div class="card-body text-center">
+                {{menu.weight}}g
+            </div>
+        </div>
+        <div class="card text-center col">
+            <div class="card-header text-nowrap text-center" style="margin-left: -14px;width:75px;font-size:13px;">
+                칼로리
+            </div>
+            <div class="card-body text-center">
+                {{ menu.kcal }}kcal
+            </div>
+        </div>
+        <div class="card text-center col">
+            <div class="card-header text-nowrap text-center" style="margin-left: -14px;width:75px;font-size:13px;">
+                탄수화물
+            </div>
+            <div class="card-body text-center">
+                {{ menu.carbs }}g
+            </div>
+        </div>
+        <div class="card text-center col">
+            <div class="card-header text-nowrap text-center" style="margin-left: -14px;width:75px;font-size:13px;">
+                단백질
+            </div>
+            <div class="card-body text-center">
+                {{ menu.proteins }}g
+            </div>
+        </div>
+        <div class="card text-center col">
+            <div class="card-header text-nowrap text-center" style="margin-left: -14px;width:75px;font-size:13px;">
+                지방
+            </div>
+            <div class="card-body text-center">
+                {{ menu.fats }}g
+            </div>
+        </div>
+    </div>
+</div>
+<form id="detail" method="get" action="{% url 'diary:detail' %}">
+    <input type="hidden" name="menu_id" value="{{menu.menu_id}}">
+    <input type="hidden" name="photo_id" value="{{menu.photo_id}}">
+    <input type="hidden" name="food_id" value="{{menu.food_id}}">
+    <div class="d-grid gap-2">
+        <button type="submit" class="btn btn-primary">수정</button>
+    </div>
+</form>
 
-<!--        // 서버에 Ajax 요청 보내기-->
-<!--        $.ajax({-->
-<!--            url: "{% url 'diary:main' %}",-->
-<!--            method: "get",-->
-<!--            data: { today: selectedDate },-->
-<!--            success: function(response){-->
-<!--                // 서버에서 받은 응답 처리 (예: 페이지 갱신 등)-->
-<!--                // 여기에서는 페이지 전체를 갱신하는 예시입니다.-->
-<!--                console.log("Ajax response:", response);-->
-<!--                $('html').html(response);-->
-<!--            },-->
-<!--            error: function(error){-->
-<!--                console.log("Ajax error:", error);-->
-<!--            }-->
-<!--        });-->
-<!--    });-->
-<!--});-->
-<!--</script>-->
+
+{% endfor %}
+
+{% else %}
+<div class="alert alert-warning" role="alert" style="margin-top:60px">
+    식사 기록이 없습니다.
+</div>
+{% endif %}
+
+{% else %}
+<p>로그인이 필요합니다.</p>
+{% endif %}
+
 
 {% endblock %}
